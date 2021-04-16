@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "jsx": "react",
+    "baseUrl": "./",
+    "paths": {
+      "react": [
+        "src/react/packages/react"
+      ],
+      "react-dom": [
+        "src/react/packages/react-dom"
+      ],
+      "shared": [
+        "src/react/packages/shared"
+      ],
+      "react-reconciler": [
+        "/src/react/packages/react-reconciler"
+      ],
+      "react-events": [
+        "src/react/packages/events"
+      ],
+      "legacy-events": [
+        "src/react/packages/legacy-events"
+      ],
+      "scheduler": [
+        "src/react/packages/scheduler"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}
