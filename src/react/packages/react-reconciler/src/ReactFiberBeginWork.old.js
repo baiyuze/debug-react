@@ -3235,9 +3235,9 @@ function beginWork(
 
   if (current !== null) {
     // TODO: The factoring of this block is weird.
-    if (
-      enableLazyContextPropagation &&
-      !includesSomeLane(renderLanes, updateLanes)
+    if (//此处不执行
+      enableLazyContextPropagation &&//启用延迟上下文
+      !includesSomeLane(renderLanes, updateLanes)//判断lane是否为0，不为零说明两个车道占有相同的位
     ) {
       const dependencies = current.dependencies;
       if (dependencies !== null && checkIfContextChanged(dependencies)) {
@@ -3245,20 +3245,20 @@ function beginWork(
       }
     }
 
-    const oldProps = current.memoizedProps;
-    const newProps = workInProgress.pendingProps;
+    const oldProps = current.memoizedProps;//旧属性
+    const newProps = workInProgress.pendingProps;//新属性
 
     if (
       oldProps !== newProps ||
-      hasLegacyContextChanged() ||
+      hasLegacyContextChanged() ||//上下文是否更改
       // Force a re-render if the implementation changed due to hot reload:
       (__DEV__ ? workInProgress.type !== current.type : false)
     ) {
       // If props or context changed, mark the fiber as having performed work.
       // This may be unset if the props are determined to be equal later (memo).
       didReceiveUpdate = true;
-    } else if (!includesSomeLane(renderLanes, updateLanes)) {
-      didReceiveUpdate = false;
+    } else if (!includesSomeLane(renderLanes, updateLanes)) {//0b001,0b001 //return true，渲染任务和更新任务是相同的优先级，则不执行此处不执行
+      didReceiveUpdate = false;//是否收到更新
       // This fiber does not have any pending work. Bailout without entering
       // the begin phase. There's still some bookkeeping we that needs to be done
       // in this optimized path, mostly pushing stuff onto the stack.
@@ -3474,30 +3474,30 @@ function beginWork(
     } else {
       if ((current.flags & ForceUpdateForLegacySuspense) !== NoFlags) {
         // This is a special case that only exists for legacy mode.
-        // See https://github.com/facebook/react/pull/19216.
+        // See https://github.com/facebook/react/pull/19216.这是仅存在于遗留模式的特殊情况。
         didReceiveUpdate = true;
       } else {
         // An update was scheduled on this fiber, but there are no new props
         // nor legacy context. Set this to false. If an update queue or context
         // consumer produces a changed value, it will set this to true. Otherwise,
         // the component will assume the children have not changed and bail out.
-        didReceiveUpdate = false;
+        didReceiveUpdate = false;//只有context或者props变化了，那么此时就设为true
       }
     }
   } else {
     didReceiveUpdate = false;
   }
 
-  // Before entering the begin phase, clear pending update priority.
-  // TODO: This assumes that we're about to evaluate the component and process
-  // the update queue. However, there's an exception: SimpleMemoComponent
-  // sometimes bails out later in the begin phase. This indicates that we should
-  // move this assignment out of the common path and into each branch.
-  workInProgress.lanes = NoLanes;
+//在进入开始阶段之前，清除挂起的更新优先级。
+//TODO:这假设我们将要评估组件和流程
+//更新队列。但是，有一个例外：SimpleMemoComponent
+//有时会在开始阶段的晚些时候退出。这表明我们应该
+//将此分配从公共路径移到每个分支中。
+  workInProgress.lanes = NoLanes;//赋值一个0lanes
 
   switch (workInProgress.tag) {
     case IndeterminateComponent: {
-      return mountIndeterminateComponent(
+      return mountIndeterminateComponent(//安装不确定组件
         current,
         workInProgress,
         workInProgress.type,

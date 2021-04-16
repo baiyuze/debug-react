@@ -16,27 +16,27 @@ export const NoFlags = /*                      */ 0b000000000000000000000;
 export const PerformedWork = /*                */ 0b000000000000000000001;
 
 // You can change the rest (and add more).
-export const Placement = /*                    */ 0b000000000000000000010;
-export const Update = /*                       */ 0b000000000000000000100;
-export const PlacementAndUpdate = /*           */ Placement | Update;
-export const Deletion = /*                     */ 0b000000000000000001000;
-export const ChildDeletion = /*                */ 0b000000000000000010000;
-export const ContentReset = /*                 */ 0b000000000000000100000;
-export const Callback = /*                     */ 0b000000000000001000000;
-export const DidCapture = /*                   */ 0b000000000000010000000;
+export const Placement = /*                    */ 0b000000000000000000010;//安置
+export const Update = /*                       */ 0b000000000000000000100;//更新
+export const PlacementAndUpdate = /*           */ Placement | Update;//两个车道合并
+export const Deletion = /*                     */ 0b000000000000000001000;//删除
+export const ChildDeletion = /*                */ 0b000000000000000010000;//子元素删除
+export const ContentReset = /*                 */ 0b000000000000000100000;//内容重置
+export const Callback = /*                     */ 0b000000000000001000000;//回调
+export const DidCapture = /*                   */ 0b000000000000010000000;//捕获
 export const Ref = /*                          */ 0b000000000000100000000;
-export const Snapshot = /*                     */ 0b000000000001000000000;
-export const Passive = /*                      */ 0b000000000010000000000;
-export const Hydrating = /*                    */ 0b000000000100000000000;
-export const HydratingAndUpdate = /*           */ Hydrating | Update;
-export const Visibility = /*                   */ 0b000000001000000000000;
+export const Snapshot = /*                     */ 0b000000000001000000000;//快照
+export const Passive = /*                      */ 0b000000000010000000000;//被动的
+export const Hydrating = /*                    */ 0b000000000100000000000;//混合物
+export const HydratingAndUpdate = /*           */ Hydrating | Update;//更新和水合物
+export const Visibility = /*                   */ 0b000000001000000000000;//可见的
 
-export const LifecycleEffectMask = Passive | Update | Callback | Ref | Snapshot;
+export const LifecycleEffectMask = Passive | Update | Callback | Ref | Snapshot;//混合的
 
-// Union of all commit flags (flags with the lifetime of a particular commit)
+// Union of all commit flags (flags with the lifetime of a particular commit)//合并
 export const HostEffectMask = /*               */ 0b000000001111111111111;
 
-// These are not really side effects, but we still reuse this field.
+// These are not really side effects, but we still reuse this field.//副作用
 export const Incomplete = /*                   */ 0b000000010000000000000;
 export const ShouldCapture = /*                */ 0b000000100000000000000;
 export const ForceUpdateForLegacySuspense = /* */ 0b000001000000000000000;

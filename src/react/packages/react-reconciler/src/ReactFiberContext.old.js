@@ -120,12 +120,12 @@ function getMaskedContext(
     return context;
   }
 }
-
+// context是否更改
 function hasContextChanged(): boolean {
   if (disableLegacyContext) {
     return false;
   } else {
-    return didPerformWorkStackCursor.current;
+    return didPerformWorkStackCursor.current;//是否执行工作堆栈游标
   }
 }
 

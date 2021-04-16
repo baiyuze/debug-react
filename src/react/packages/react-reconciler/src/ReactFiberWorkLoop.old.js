@@ -168,7 +168,8 @@ import {
   lanesToEventPriority,
 } from './ReactEventPriorities.old';
 import { requestCurrentTransition, NoTransition } from './ReactFiberTransition';
-import { beginWork as originalBeginWork } from './ReactFiberBeginWork.old';
+import { beginWork } from './ReactFiberBeginWork.old';
+// import { beginWork as originalBeginWork } from './ReactFiberBeginWork.old';
 import { completeWork } from './ReactFiberCompleteWork.old';
 import { unwindWork, unwindInterruptedWork } from './ReactFiberUnwindWork.old';
 import {
@@ -2640,82 +2641,80 @@ function warnAboutUpdateOnUnmountedFiberInDEV(fiber) {
   }
 }
 
-let beginWork;
-if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
-  const dummyFiber = null;
-  beginWork = (current, unitOfWork, lanes) => {
-    // If a component throws an error, we replay it again in a synchronously
-    // dispatched event, so that the debugger will treat it as an uncaught
-    // error See ReactErrorUtils for more information.
+// if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
+//   const dummyFiber = null;
+//   beginWork = (current, unitOfWork, lanes) => {
+//     // If a component throws an error, we replay it again in a synchronously
+//     // dispatched event, so that the debugger will treat it as an uncaught
+//     // error See ReactErrorUtils for more information.
 
-    // Before entering the begin phase, copy the work-in-progress onto a dummy
-    // fiber. If beginWork throws, we'll use this to reset the state.
-    const originalWorkInProgressCopy = assignFiberPropertiesInDEV(
-      dummyFiber,
-      unitOfWork,
-    );
-    try {
-      return originalBeginWork(current, unitOfWork, lanes);
-    } catch (originalError) {
-      if (
-        originalError !== null &&
-        typeof originalError === 'object' &&
-        typeof originalError.then === 'function'
-      ) {
-        // Don't replay promises. Treat everything else like an error.
-        throw originalError;
-      }
+//     // Before entering the begin phase, copy the work-in-progress onto a dummy
+//     // fiber. If beginWork throws, we'll use this to reset the state.
+//     const originalWorkInProgressCopy = assignFiberPropertiesInDEV(
+//       dummyFiber,
+//       unitOfWork,
+//     );
+//     try {
+//       return originalBeginWork(current, unitOfWork, lanes);
+//     } catch (originalError) {
+//       if (
+//         originalError !== null &&
+//         typeof originalError === 'object' &&
+//         typeof originalError.then === 'function'
+//       ) {
+//         // Don't replay promises. Treat everything else like an error.
+//         throw originalError;
+//       }
 
-      // Keep this code in sync with handleError; any changes here must have
-      // corresponding changes there.
-      resetContextDependencies();
-      resetHooksAfterThrow();
-      // Don't reset current debug fiber, since we're about to work on the
-      // same fiber again.
+//       //保持此代码与handleError同步；此处的任何更改都必须
+//       //相应的变化。
+//       resetContextDependencies();
+//       resetHooksAfterThrow();
+//       //不要重置当前的调试Fiber，因为我们将要处理
+//       //同样的Fiber。
+//       //展开失败的堆栈帧
+//       unwindInterruptedWork(unitOfWork, workInProgressRootRenderLanes);
 
-      // Unwind the failed stack frame
-      unwindInterruptedWork(unitOfWork, workInProgressRootRenderLanes);
+//       // Restore the original properties of the fiber.
+//       assignFiberPropertiesInDEV(unitOfWork, originalWorkInProgressCopy);
 
-      // Restore the original properties of the fiber.
-      assignFiberPropertiesInDEV(unitOfWork, originalWorkInProgressCopy);
+//       if (enableProfilerTimer && unitOfWork.mode & ProfileMode) {
+//         // Reset the profiler timer.
+//         startProfilerTimer(unitOfWork);
+//       }
 
-      if (enableProfilerTimer && unitOfWork.mode & ProfileMode) {
-        // Reset the profiler timer.
-        startProfilerTimer(unitOfWork);
-      }
+//       // Run beginWork again.
+//       invokeGuardedCallback(
+//         null,
+//         originalBeginWork,
+//         null,
+//         current,
+//         unitOfWork,
+//         lanes,
+//       );
 
-      // Run beginWork again.
-      invokeGuardedCallback(
-        null,
-        originalBeginWork,
-        null,
-        current,
-        unitOfWork,
-        lanes,
-      );
-
-      if (hasCaughtError()) {
-        const replayError = clearCaughtError();
-        if (
-          typeof replayError === 'object' &&
-          replayError !== null &&
-          replayError._suppressLogging &&
-          typeof originalError === 'object' &&
-          originalError !== null &&
-          !originalError._suppressLogging
-        ) {
-          // If suppressed, let the flag carry over to the original error which is the one we'll rethrow.
-          originalError._suppressLogging = true;
-        }
-      }
-      // We always throw the original error in case the second render pass is not idempotent.
-      // This can happen if a memoized function or CommonJS module doesn't throw after first invokation.
-      throw originalError;
-    }
-  };
-} else {
-  beginWork = originalBeginWork;
-}
+//       if (hasCaughtError()) {
+//         const replayError = clearCaughtError();
+//         if (
+//           typeof replayError === 'object' &&
+//           replayError !== null &&
+//           replayError._suppressLogging &&
+//           typeof originalError === 'object' &&
+//           originalError !== null &&
+//           !originalError._suppressLogging
+//         ) {
+//           // If suppressed, let the flag carry over to the original error which is the one we'll rethrow.
+//           originalError._suppressLogging = true;
+//         }
+//       }
+//       // We always throw the original error in case the second render pass is not idempotent.
+//       // This can happen if a memoized function or CommonJS module doesn't throw after first invokation.
+//       throw originalError;
+//     }
+//   };
+// } else {
+//  const beginWork = originalBeginWork;//current, unitOfWork, lanes
+// }
 
 let didWarnAboutUpdateInRender = false;
 let didWarnAboutUpdateInRenderForAnotherComponent;

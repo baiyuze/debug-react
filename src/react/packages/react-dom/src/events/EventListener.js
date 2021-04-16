@@ -21,7 +21,7 @@ export function addEventCaptureListener(
   eventType: string,
   listener: Function,
 ): Function {
-  console.log(eventType, listener,target,'eventType, listener');
+  // console.log(eventType, listener,target,'eventType, listener');
   target.addEventListener(eventType, listener, true);
   return listener;
 }
